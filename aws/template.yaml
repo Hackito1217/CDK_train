@@ -1,0 +1,696 @@
+Resources:
+  myfunctionServiceRole41691664:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SampleStack/my-function/ServiceRole/Resource
+  myfunctionDF753486:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30S3Bucket9F96BDB4
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30S3VersionKey2D35A014
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30S3VersionKey2D35A014
+      Handler: app.handler
+      Role:
+        Fn::GetAtt:
+          - myfunctionServiceRole41691664
+          - Arn
+      Runtime: nodejs12.x
+      FunctionName: my-function
+    DependsOn:
+      - myfunctionServiceRole41691664
+    Metadata:
+      aws:cdk:path: SampleStack/my-function/Resource
+      aws:asset:path: asset.9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30
+      aws:asset:property: Code
+  myfunctionAllowEventRuleSampleStackScheduleEvent59EE019DB50532DF:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - myfunctionDF753486
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - ScheduleEvent0F292187
+          - Arn
+    Metadata:
+      aws:cdk:path: SampleStack/my-function/AllowEventRuleSampleStackScheduleEvent59EE019D
+  ddbfunctionServiceRole7ED18947:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SampleStack/ddb-function/ServiceRole/Resource
+  ddbfunctionServiceRoleDefaultPolicy99B3E12C:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - sasasamtesteeC9DDE8C2
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: ddbfunctionServiceRoleDefaultPolicy99B3E12C
+      Roles:
+        - Ref: ddbfunctionServiceRole7ED18947
+    Metadata:
+      aws:cdk:path: SampleStack/ddb-function/ServiceRole/DefaultPolicy/Resource
+  ddbfunctionB785DB98:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aS3Bucket3E68DC6E
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aS3VersionKeyBCE64EF5
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aS3VersionKeyBCE64EF5
+      Handler: app.handler
+      Role:
+        Fn::GetAtt:
+          - ddbfunctionServiceRole7ED18947
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME: sam-samples
+          ENV: nonono
+      FunctionName: ddb-function
+    DependsOn:
+      - ddbfunctionServiceRoleDefaultPolicy99B3E12C
+      - ddbfunctionServiceRole7ED18947
+    Metadata:
+      aws:cdk:path: SampleStack/ddb-function/Resource
+      aws:asset:path: asset.a62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1a
+      aws:asset:property: Code
+  apifunctionServiceRole18CE71BD:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SampleStack/api-function/ServiceRole/Resource
+  apifunction06E4C28F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3S3Bucket3DCB6E54
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3S3VersionKey6381CFCA
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3S3VersionKey6381CFCA
+      Handler: app.handler
+      Role:
+        Fn::GetAtt:
+          - apifunctionServiceRole18CE71BD
+          - Arn
+      Runtime: nodejs12.x
+      FunctionName: api-function
+    DependsOn:
+      - apifunctionServiceRole18CE71BD
+    Metadata:
+      aws:cdk:path: SampleStack/api-function/Resource
+      aws:asset:path: asset.caf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3
+      aws:asset:property: Code
+  s3functionServiceRole9B8998DF:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SampleStack/s3-function/ServiceRole/Resource
+  s3function6E78F641:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cS3BucketD9E2CCD1
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cS3VersionKeyF66308D1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cS3VersionKeyF66308D1
+      Handler: app.handler
+      Role:
+        Fn::GetAtt:
+          - s3functionServiceRole9B8998DF
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          ENV: nonono
+      FunctionName: s3-function
+    DependsOn:
+      - s3functionServiceRole9B8998DF
+    Metadata:
+      aws:cdk:path: SampleStack/s3-function/Resource
+      aws:asset:path: asset.e6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38c
+      aws:asset:property: Code
+  s3functionAllowBucketNotificationsFromSampleStacklambdamindenaD5F46EFE9EFAB69A:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - s3function6E78F641
+          - Arn
+      Principal: s3.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::GetAtt:
+          - lambdamindena9F523032
+          - Arn
+    Metadata:
+      aws:cdk:path: SampleStack/s3-function/AllowBucketNotificationsFromSampleStacklambdamindenaD5F46EFE
+  sasasamtesteeC9DDE8C2:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: sasasam-testee
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: SampleStack/sasasam-testee/Resource
+  apiC8550315:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: lambda-sample
+    Metadata:
+      aws:cdk:path: SampleStack/api/Resource
+  apiDeployment149F12942f85fd06934ab9f50ea1d0afa659c241:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: apiC8550315
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - apiGETECF0BD67
+    Metadata:
+      aws:cdk:path: SampleStack/api/Deployment/Resource
+  apiDeploymentStageprod896C8101:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: apiC8550315
+      DeploymentId:
+        Ref: apiDeployment149F12942f85fd06934ab9f50ea1d0afa659c241
+      StageName: prod
+    Metadata:
+      aws:cdk:path: SampleStack/api/DeploymentStage.prod/Resource
+  apiCloudWatchRoleAC81D93E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: SampleStack/api/CloudWatchRole/Resource
+  apiAccount57E28B43:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - apiCloudWatchRoleAC81D93E
+          - Arn
+    DependsOn:
+      - apiC8550315
+    Metadata:
+      aws:cdk:path: SampleStack/api/Account
+  apiGETApiPermissionSampleStackapiD7D9EC17GET3B9A02A1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - apifunction06E4C28F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: apiC8550315
+            - /
+            - Ref: apiDeploymentStageprod896C8101
+            - /GET/
+    Metadata:
+      aws:cdk:path: SampleStack/api/Default/GET/ApiPermission.SampleStackapiD7D9EC17.GET..
+  apiGETApiPermissionTestSampleStackapiD7D9EC17GET35713A78:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - apifunction06E4C28F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: apiC8550315
+            - /test-invoke-stage/GET/
+    Metadata:
+      aws:cdk:path: SampleStack/api/Default/GET/ApiPermission.Test.SampleStackapiD7D9EC17.GET..
+  apiGETECF0BD67:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Fn::GetAtt:
+          - apiC8550315
+          - RootResourceId
+      RestApiId:
+        Ref: apiC8550315
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - apifunction06E4C28F
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: SampleStack/api/Default/GET/Resource
+  lambdamindena9F523032:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lambda-minden-a
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: SampleStack/lambda-minden-a/Resource
+  lambdamindenaNotifications4ABF2952:
+    Type: Custom::S3BucketNotifications
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691
+          - Arn
+      BucketName:
+        Ref: lambdamindena9F523032
+      NotificationConfiguration:
+        LambdaFunctionConfigurations:
+          - Events:
+              - s3:ObjectCreated:Put
+            LambdaFunctionArn:
+              Fn::GetAtt:
+                - s3function6E78F641
+                - Arn
+    DependsOn:
+      - s3functionAllowBucketNotificationsFromSampleStacklambdamindenaD5F46EFE9EFAB69A
+    Metadata:
+      aws:cdk:path: SampleStack/lambda-minden-a/Notifications/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SampleStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: s3:PutBucketNotification
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36
+      Roles:
+        - Ref: BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+    Metadata:
+      aws:cdk:path: SampleStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: AWS CloudFormation handler for "Custom::S3BucketNotifications" resources (@aws-cdk/aws-s3)
+      Code:
+        ZipFile: >-
+          exports.handler = (event, context) => {
+              // eslint-disable-next-line @typescript-eslint/no-require-imports, import/no-extraneous-dependencies
+              const s3 = new (require('aws-sdk').S3)();
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const https = require("https");
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const url = require("url");
+              log(JSON.stringify(event, undefined, 2));
+              const props = event.ResourceProperties;
+              if (event.RequestType === 'Delete') {
+                  props.NotificationConfiguration = {}; // this is how you clean out notifications
+              }
+              const req = {
+                  Bucket: props.BucketName,
+                  NotificationConfiguration: props.NotificationConfiguration
+              };
+              return s3.putBucketNotificationConfiguration(req, (err, data) => {
+                  log({ err, data });
+                  if (err) {
+                      return submitResponse("FAILED", err.message + `\nMore information in CloudWatch Log Stream: ${context.logStreamName}`);
+                  }
+                  else {
+                      return submitResponse("SUCCESS");
+                  }
+              });
+              function log(obj) {
+                  console.error(event.RequestId, event.StackId, event.LogicalResourceId, obj);
+              }
+              // tslint:disable-next-line:max-line-length
+              // adapted from https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-cfnresponsemodule
+              // to allow sending an error messge as a reason.
+              function submitResponse(responseStatus, reason) {
+                  const responseBody = JSON.stringify({
+                      Status: responseStatus,
+                      Reason: reason || "See the details in CloudWatch Log Stream: " + context.logStreamName,
+                      PhysicalResourceId: event.PhysicalResourceId || event.LogicalResourceId,
+                      StackId: event.StackId,
+                      RequestId: event.RequestId,
+                      LogicalResourceId: event.LogicalResourceId,
+                      NoEcho: false,
+                  });
+                  log({ responseBody });
+                  const parsedUrl = url.parse(event.ResponseURL);
+                  const options = {
+                      hostname: parsedUrl.hostname,
+                      port: 443,
+                      path: parsedUrl.path,
+                      method: "PUT",
+                      headers: {
+                          "content-type": "",
+                          "content-length": responseBody.length
+                      }
+                  };
+                  const request = https.request(options, (r) => {
+                      log({ statusCode: r.statusCode, statusMessage: r.statusMessage });
+                      context.done();
+                  });
+                  request.on("error", (error) => {
+                      log({ sendError: error });
+                      context.done();
+                  });
+                  request.write(responseBody);
+                  request.end();
+              }
+          };
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+          - Arn
+      Runtime: nodejs10.x
+      Timeout: 300
+    DependsOn:
+      - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36
+      - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+    Metadata:
+      aws:cdk:path: SampleStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource
+  ScheduleEvent0F292187:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(5 minutes)
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - myfunctionDF753486
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: SampleStack/ScheduleEvent/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.22.0,@aws-cdk/assets=1.22.0,@aws-cdk/aws-apigateway=1.22.0,@aws-cdk/aws-applicationautoscaling=1.22.0,@aws-cdk/aws-autoscaling=1.22.0,@aws-cdk/aws-autoscaling-common=1.22.0,@aws-cdk/aws-autoscaling-hooktargets=1.22.0,@aws-cdk/aws-cloudwatch=1.22.0,@aws-cdk/aws-dynamodb=1.22.0,@aws-cdk/aws-ec2=1.22.0,@aws-cdk/aws-ecr=1.22.0,@aws-cdk/aws-ecr-assets=1.22.0,@aws-cdk/aws-ecs=1.22.0,@aws-cdk/aws-elasticloadbalancingv2=1.22.0,@aws-cdk/aws-events=1.22.0,@aws-cdk/aws-events-targets=1.22.0,@aws-cdk/aws-iam=1.22.0,@aws-cdk/aws-kms=1.22.0,@aws-cdk/aws-lambda=1.22.0,@aws-cdk/aws-logs=1.22.0,@aws-cdk/aws-s3=1.22.0,@aws-cdk/aws-s3-assets=1.22.0,@aws-cdk/aws-s3-notifications=1.22.0,@aws-cdk/aws-servicediscovery=1.22.0,@aws-cdk/aws-sns=1.22.0,@aws-cdk/aws-sns-subscriptions=1.22.0,@aws-cdk/aws-sqs=1.22.0,@aws-cdk/aws-ssm=1.22.0,@aws-cdk/core=1.22.0,@aws-cdk/cx-api=1.22.0,@aws-cdk/region-info=1.22.0,jsii-runtime=node.js/v12.14.1
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30S3Bucket9F96BDB4:
+    Type: String
+    Description: S3 bucket for asset "9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30"
+  AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30S3VersionKey2D35A014:
+    Type: String
+    Description: S3 key for asset version "9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30"
+  AssetParameters9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30ArtifactHashF22ADB95:
+    Type: String
+    Description: Artifact hash for asset "9a556e73277f072ea294b202625c5fd339b948ab71865a6071436266c1739a30"
+  AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aS3Bucket3E68DC6E:
+    Type: String
+    Description: S3 bucket for asset "a62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1a"
+  AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aS3VersionKeyBCE64EF5:
+    Type: String
+    Description: S3 key for asset version "a62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1a"
+  AssetParametersa62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1aArtifactHashB49D138F:
+    Type: String
+    Description: Artifact hash for asset "a62389a7782c8777985687891c500cf78f0a012289b4fb64dc49c1154fe01e1a"
+  AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3S3Bucket3DCB6E54:
+    Type: String
+    Description: S3 bucket for asset "caf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3"
+  AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3S3VersionKey6381CFCA:
+    Type: String
+    Description: S3 key for asset version "caf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3"
+  AssetParameterscaf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3ArtifactHash3BA16500:
+    Type: String
+    Description: Artifact hash for asset "caf25119763316620c47fc94bc10546b3f30704a40c11493e0cb57b6fdae68d3"
+  AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cS3BucketD9E2CCD1:
+    Type: String
+    Description: S3 bucket for asset "e6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38c"
+  AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cS3VersionKeyF66308D1:
+    Type: String
+    Description: S3 key for asset version "e6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38c"
+  AssetParameterse6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38cArtifactHash3B1E8E8E:
+    Type: String
+    Description: Artifact hash for asset "e6dd8eb51d63bf8225d01f2569bc2d2809bc0338049518167281f80602eda38c"
+Outputs:
+  apiEndpoint9349E63C:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: apiC8550315
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: apiDeploymentStageprod896C8101
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
